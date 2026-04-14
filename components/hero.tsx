@@ -1,123 +1,89 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, CheckCircle } from 'lucide-react'
+import { ArrowRight, Play, ShieldCheck, Star } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[600px] overflow-hidden bg-background pt-20 pb-10">
-      {/* Background gradient accent */}
-      <div className="absolute right-0 top-0 -z-10 h-96 w-96 rounded-full bg-gradient-to-br from-accent/20 to-transparent blur-3xl" />
-      <div className="absolute left-1/2 top-1/3 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-primary/10 to-transparent blur-3xl" />
+    <section className="relative pt-32 pb-20 overflow-hidden bg-background">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-30">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] right-[-10%] w-[30%] h-[30%] bg-accent/20 rounded-full blur-[100px]" />
+      </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-2 md:gap-8 lg:gap-12 items-center">
-          {/* Left content */}
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div className="inline-block rounded-lg bg-secondary/10 px-4 py-2">
-                <span className="text-sm font-medium text-secondary">Structured Learning Programmes</span>
-              </div>
-              <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl text-balance">
-                Master Skills in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">25 Hours</span>
-              </h1>
-              <p className="text-lg text-foreground/70 leading-relaxed max-w-xl">
-                Professional certification courses delivered online, offline, and hybrid. Start your learning journey today and get industry-recognized credentials.
-              </p>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+          {/* Left Content: Value Proposition */}
+          <div className="flex-1 text-center lg:text-left space-y-8 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wide uppercase">
+              <Star className="w-3 h-3 fill-primary" />
+              <span>The Next Generation of Learning</span>
             </div>
+            
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.1] text-balance">
+              Master High-Value Skills in <span className="text-primary italic">25 Hours</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-balance">
+              Industry-recognized certification programmes designed for the modern world. 
+              Delivered online, offline, and hybrid to fit your schedule.
+            </p>
 
-            {/* Key benefits */}
-            <div className="space-y-3 py-4">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                <span className="text-foreground/80">Industry-recognized certificates</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                <span className="text-foreground/80">Flexible learning modes (Online, Offline, Hybrid)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                <span className="text-foreground/80">Learn from expert trainers</span>
-              </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
+              <Button size="lg" className="h-14 px-8 text-lg font-semibold rounded-xl bg-primary hover:bg-primary/90 premium-shadow">
                 Explore Courses
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <Button size="lg" variant="outline">
-                Learn More
+              <Button size="lg" variant="ghost" className="h-14 px-8 text-lg font-semibold rounded-xl hover:bg-secondary group">
+                <Play className="mr-2 w-5 h-5 fill-foreground group-hover:fill-primary transition-colors" />
+                See How It Works
               </Button>
+            </div>
+
+            <div className="flex items-center justify-center lg:justify-start gap-8 pt-8 border-t border-border/50 transition-all">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium text-foreground/80">Certified Academy</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-background bg-secondary" />
+                  ))}
+                </div>
+                <span className="text-sm font-medium text-foreground/80">5,000+ Enrolled</span>
+              </div>
             </div>
           </div>
 
-          {/* Right side - Visual showcase */}
-          <div className="relative">
-            <div className="space-y-4">
-              {/* Course cards preview */}
-              <div className="rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 border border-border p-6 hover:border-primary/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-lg bg-primary/20" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground text-sm">AI Fundamentals</h3>
-                    <p className="text-xs text-foreground/60">25 hours • Beginner</p>
-                  </div>
+          {/* Right Visual: Dashboard Preview */}
+          <div className="flex-1 w-full relative">
+            <div className="relative z-10 rounded-2xl border border-border/50 overflow-hidden premium-shadow bg-card shadow-2xl animate-in fade-in slide-in-from-bottom-10 duration-1000">
+              <Image 
+                src="/images/hero-preview.png" 
+                alt="Innoventa Dashboard Preview" 
+                width={800} 
+                height={600}
+                className="w-full h-auto object-cover"
+              />
+              {/* Overlay glass element */}
+              <div className="absolute bottom-6 left-6 right-6 glass p-4 rounded-xl flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-primary uppercase">Current Progress</p>
+                  <p className="text-sm font-bold text-foreground">AI & Machine Learning</p>
                 </div>
-                <div className="h-2 bg-border rounded-full overflow-hidden">
-                  <div className="h-full w-2/3 bg-gradient-to-r from-primary to-accent rounded-full" />
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-gradient-to-br from-accent/5 to-secondary/5 border border-border p-6 hover:border-accent/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-lg bg-accent/20" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground text-sm">Web Design Basics</h3>
-                    <p className="text-xs text-foreground/60">25 hours • Beginner</p>
-                  </div>
-                </div>
-                <div className="h-2 bg-border rounded-full overflow-hidden">
-                  <div className="h-full w-1/2 bg-gradient-to-r from-accent to-secondary rounded-full" />
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-gradient-to-br from-secondary/5 to-primary/5 border border-border p-6 hover:border-secondary/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-lg bg-secondary/20" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground text-sm">Communication Skills</h3>
-                    <p className="text-xs text-foreground/60">25 hours • Beginner</p>
-                  </div>
-                </div>
-                <div className="h-2 bg-border rounded-full overflow-hidden">
-                  <div className="h-full w-3/4 bg-gradient-to-r from-secondary to-accent rounded-full" />
+                <div className="text-right">
+                  <p className="text-lg font-bold text-primary">85%</p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-16 border-t border-border/50 mt-16">
-          <div className="text-center">
-            <p className="text-3xl font-bold text-primary">500+</p>
-            <p className="text-sm text-foreground/60 mt-1">Active Students</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold text-secondary">15+</p>
-            <p className="text-sm text-foreground/60 mt-1">Expert Trainers</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold text-accent">50+</p>
-            <p className="text-sm text-foreground/60 mt-1">Courses Available</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold text-primary">95%</p>
-            <p className="text-sm text-foreground/60 mt-1">Completion Rate</p>
+            
+            {/* Decorative elements behind the image */}
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent/30 rounded-full blur-3xl -z-10" />
+            <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-primary/20 rounded-full blur-3xl -z-10" />
           </div>
         </div>
       </div>

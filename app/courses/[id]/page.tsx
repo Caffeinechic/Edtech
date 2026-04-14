@@ -8,10 +8,13 @@ import Footer from '@/components/footer'
 import EnrollmentModal from '@/components/enrollment-modal'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { mockCourses } from '@/lib/mock-data'
 import { 
   Clock, Users, Star, Target, CheckCircle, Award, 
-  BarChart3, BookOpen, Zap, User, ArrowRight, Share2
+  BarChart3, BookOpen, Zap, User, ArrowRight, Share2,
+  Calendar, ShieldCheck, Globe, Wifi, Users2
 } from 'lucide-react'
 
 export default function CourseDetailPage() {
@@ -20,16 +23,15 @@ export default function CourseDetailPage() {
   const courseId = parseInt(params.id as string)
   const course = mockCourses.find(c => c.id === courseId)
   const [showEnrollModal, setShowEnrollModal] = useState(false)
-  const [enrollmentSuccess, setEnrollmentSuccess] = useState(false)
 
   if (!course) {
     return (
       <main className="min-h-screen bg-background flex flex-col">
         <Navbar />
         <div className="flex-grow flex items-center justify-center px-4">
-          <Card className="text-center py-12 px-6 max-w-md">
+          <Card className="text-center py-12 px-6 max-w-md border-border/50 premium-shadow">
             <p className="text-foreground/70 mb-4">Course not found</p>
-            <Button asChild>
+            <Button size="lg" className="rounded-xl font-bold" asChild>
               <Link href="/courses">Back to Courses</Link>
             </Button>
           </Card>
@@ -39,213 +41,240 @@ export default function CourseDetailPage() {
     )
   }
 
+  const ModeIcon = course.mode === 'Online' ? Wifi : course.mode === 'Offline' ? Users2 : Globe
+
   return (
     <main className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
-      {/* Hero section */}
-      <section className={`bg-gradient-to-br ${course.color} relative overflow-hidden py-12 text-white`}>
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          <Link href="/courses" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 text-sm">
-            <ArrowRight className="w-4 h-4 rotate-180" />
-            Back to Courses
-          </Link>
+      {/* Hero Section: Dynamic & Premium */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className={`absolute inset-0 bg-gradient-to-br ${course.color} opacity-[0.03] -z-10`} />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent -z-10" />
+        
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-12 items-start">
+            <div className="flex-1 space-y-6">
+              <nav className="flex items-center gap-2 text-sm font-semibold text-primary/60 mb-8">
+                <Link href="/courses" className="hover:text-primary transition-colors">Courses</Link>
+                <ArrowRight className="w-3 h-3" />
+                <span className="text-foreground">{course.category}</span>
+              </nav>
 
-          <div className="grid lg:grid-cols-3 gap-8 items-start mt-8">
-            <div className="lg:col-span-2">
-              <span className="inline-block bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4">
+              <Badge variant="secondary" className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary border-primary/20">
                 {course.category}
-              </span>
-              <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-balance">{course.title}</h1>
-              <p className="text-lg text-white/90 mb-6 max-w-2xl">{course.longDescription}</p>
+              </Badge>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tight leading-[1.1] text-balance">
+                {course.title}
+              </h1>
+              
+              <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
+                {course.description}
+              </p>
 
-              <div className="flex flex-wrap gap-6 text-white/90">
+              <div className="flex flex-wrap items-center gap-6 pt-4">
                 <div className="flex items-center gap-2">
-                  <Star className="w-5 h-5 fill-white" />
-                  <span><strong className="text-white">{course.rating}</strong> ({course.reviews} reviews)</span>
+                  <Star className="w-5 h-5 fill-primary text-primary" />
+                  <span className="font-bold text-foreground">{course.rating}</span>
+                  <span className="text-muted-foreground">({course.reviews} Reviews)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  <span><strong className="text-white">{course.enrollment}</strong> students enrolled</span>
+                  <Users className="w-5 h-5 text-primary" />
+                  <span className="font-bold text-foreground">{course.enrollment}</span>
+                  <span className="text-muted-foreground">Students Joined</span>
                 </div>
+                <div className="flex items-center gap-2 px-3 py-1 bg-secondary rounded-lg border border-border/50">
+                  <ModeIcon className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-bold">{course.mode}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 pt-6">
+                <div className="flex -space-x-3">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-secondary" />
+                  ))}
+                </div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Joined by <span className="text-foreground font-bold">200+</span> professionals this week
+                </p>
               </div>
             </div>
 
-            {/* Quick info card */}
-            <Card className="p-6 sticky top-24">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-foreground/70 text-sm mb-1">Course Price</p>
-                  <p className="text-4xl font-bold text-primary">${course.price}</p>
-                </div>
-
-                <div className="space-y-3 py-4 border-y border-border">
-                  <div className="flex items-center gap-2 text-sm text-foreground/70">
-                    <Clock className="w-4 h-4 text-accent" />
-                    <span>{course.duration}</span>
+            {/* Quick Pricing & CTA Card */}
+            <Card className="w-full lg:w-96 p-8 border-border/50 premium-shadow bg-card relative z-10 rounded-3xl overflow-hidden">
+               <div className="absolute top-0 right-0 p-4">
+                  <Badge className="bg-emerald-500 text-white border-0 font-bold uppercase tracking-tight">Active Batch</Badge>
+               </div>
+               
+               <div className="space-y-6">
+                  <div>
+                    <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Programme Fee</span>
+                    <div className="flex items-baseline gap-2 mt-1">
+                      <span className="text-5xl font-black text-foreground">${course.price}</span>
+                      <span className="text-muted-foreground line-through">$499</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-foreground/70">
-                    <Target className="w-4 h-4 text-accent" />
-                    <span>{course.level}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-foreground/70">
-                    <BookOpen className="w-4 h-4 text-accent" />
-                    <span>{course.modules.length} modules</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-foreground/70">
-                    <Award className="w-4 h-4 text-accent" />
-                    <span>Certificate included</span>
-                  </div>
-                </div>
 
-                <Button
-                  className="w-full bg-primary hover:bg-primary/90 text-base py-6"
-                  onClick={() => setShowEnrollModal(true)}
-                >
-                  Enroll Now
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  <div className="grid grid-cols-2 gap-4 py-6 border-y border-border/50">
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase">Duration</p>
+                      <p className="text-sm font-bold flex items-center gap-1.5">
+                        <Clock className="w-4 h-4 text-primary" /> {course.duration}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase">Level</p>
+                      <p className="text-sm font-bold flex items-center gap-1.5">
+                        <Target className="w-4 h-4 text-primary" /> {course.level}
+                      </p>
+                    </div>
+                  </div>
 
-                <Button variant="outline" className="w-full">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
+                  <div className="space-y-4">
+                    <Button 
+                      size="lg" 
+                      className="w-full h-16 rounded-2xl bg-primary text-xl font-bold shadow-xl shadow-primary/20 hover:translate-y-[-2px] transition-all"
+                      onClick={() => setShowEnrollModal(true)}
+                    >
+                      Apply Now
+                      <ArrowRight className="ml-2 w-6 h-6" />
+                    </Button>
+                    <p className="text-center text-xs font-medium text-muted-foreground">
+                      No recruitment fee. Pay only for the certification.
+                    </p>
+                  </div>
 
-                <div className="bg-accent/10 rounded-lg p-3 text-xs text-foreground/70">
-                  <p className="font-medium text-foreground mb-1">Next Batch Starts</p>
-                  <p>{course.startDate}</p>
-                </div>
-              </div>
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center gap-2 text-sm text-foreground/80 font-medium">
+                      <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                      <span>100% Outcome Guarantee</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-foreground/80 font-medium">
+                      <Calendar className="w-4 h-4 text-primary" />
+                      <span>Next Batch: {course.startDate}</span>
+                    </div>
+                  </div>
+               </div>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Main content */}
+      {/* Main Content Sections */}
       <div className="flex-grow bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Left column */}
-            <div className="lg:col-span-2 space-y-12">
-              {/* Course Overview */}
-              <section>
-                <h2 className="text-3xl font-bold text-foreground mb-6">Course Overview</h2>
-                <p className="text-foreground/70 leading-relaxed mb-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid lg:grid-cols-3 gap-16">
+            <div className="lg:col-span-2 space-y-16">
+              {/* Outcome-Driven Overview */}
+              <section id="overview" className="space-y-6">
+                <h2 className="text-3xl font-bold tracking-tight">Programme <span className="text-primary italic">Overview</span></h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
                   {course.longDescription}
                 </p>
-
-                {/* Key highlights */}
-                <div className="grid md:grid-cols-2 gap-4 mt-8">
-                  {[
-                    { icon: Zap, title: 'Practical Skills', desc: 'Real-world projects' },
-                    { icon: BarChart3, title: 'Progress Tracking', desc: 'Monitor your growth' },
-                    { icon: Award, title: 'Certification', desc: 'Industry-recognized' },
-                    { icon: Users, title: 'Community', desc: 'Learn with peers' },
-                  ].map((item, i) => {
-                    const Icon = item.icon
-                    return (
-                      <Card key={i} className="p-4 flex gap-4">
-                        <Icon className="w-6 h-6 text-primary flex-shrink-0" />
-                        <div>
-                          <p className="font-semibold text-foreground text-sm">{item.title}</p>
-                          <p className="text-xs text-foreground/60">{item.desc}</p>
-                        </div>
-                      </Card>
-                    )
-                  })}
-                </div>
-              </section>
-
-              {/* Learning Outcomes */}
-              <section>
-                <h2 className="text-2xl font-bold text-foreground mb-6">What You'll Learn</h2>
-                <div className="space-y-3">
-                  {course.learningOutcomes.map((outcome, index) => (
-                    <div key={index} className="flex gap-3">
-                      <CheckCircle className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
-                      <p className="text-foreground/80">{outcome}</p>
+                <div className="grid sm:grid-cols-2 gap-6 pt-6">
+                  {course.learningOutcomes.slice(0, 4).map((outcome, i) => (
+                    <div key={i} className="flex gap-4 p-5 rounded-2xl border border-border/50 bg-secondary/30">
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle className="w-4 h-4 text-primary" />
+                      </div>
+                      <p className="text-sm font-medium text-foreground/80 italic">{outcome}</p>
                     </div>
                   ))}
                 </div>
               </section>
 
-              {/* Course Curriculum */}
-              <section>
-                <h2 className="text-2xl font-bold text-foreground mb-6">Course Curriculum</h2>
-                <div className="space-y-3">
-                  {course.modules.map((module, index) => (
-                    <Card key={module.id} className="p-4 hover:border-accent/50 transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div className="flex gap-4 flex-grow">
-                          <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <span className="font-semibold text-primary text-sm">{index + 1}</span>
-                          </div>
-                          <div className="flex-grow">
-                            <h3 className="font-semibold text-foreground">{module.title}</h3>
-                            <p className="text-sm text-foreground/60">{module.lessons} lessons</p>
-                          </div>
-                        </div>
-                        <div className="text-sm text-foreground/60 text-right flex-shrink-0">
-                          {module.duration}
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
+              {/* Curriculum - Expandable */}
+              <section id="curriculum" className="space-y-8">
+                <div className="flex items-end justify-between border-b border-border pb-6">
+                  <h2 className="text-3xl font-bold tracking-tight">Learning <span className="text-primary italic">Journey</span></h2>
+                  <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                    {course.modules.length} Modules &bull; 24 Lessons
+                  </p>
                 </div>
+                
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                  {course.modules.map((module, i) => (
+                    <AccordionItem key={module.id} value={`item-${i}`} className="border border-border/50 rounded-2xl px-6 bg-card overflow-hidden">
+                      <AccordionTrigger className="hover:no-underline py-6">
+                        <div className="flex items-center gap-4 text-left">
+                          <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm">
+                            0{i + 1}
+                          </span>
+                          <div>
+                            <p className="font-bold text-lg">{module.title}</p>
+                            <p className="text-xs font-bold text-muted-foreground uppercase mt-0.5">{module.duration}</p>
+                          </div>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-6 text-muted-foreground leading-relaxed pl-14">
+                        <div className="space-y-3">
+                          <p>In this module, you will master the core foundations of {module.title.toLowerCase()} through practical exercises and expert-led sessions.</p>
+                          <ul className="grid grid-cols-2 gap-2 text-sm">
+                            <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-primary" /> Interactive Session</li>
+                            <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-primary" /> Hands-on Project</li>
+                            <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-primary" /> Assessment</li>
+                            <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-primary" /> Q&A Workshop</li>
+                          </ul>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
               </section>
 
               {/* Instructor */}
-              <section>
-                <h2 className="text-2xl font-bold text-foreground mb-6">Your Instructor</h2>
-                <Card className="p-6 flex gap-6">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex-shrink-0 overflow-hidden">
-                    <img src={course.instructor.avatar} alt={course.instructor.name} className="w-full h-full" />
+              <section id="instructor" className="pt-8">
+                <h2 className="text-3xl font-bold tracking-tight mb-8">Meet the <span className="text-primary italic">Expert</span></h2>
+                <Card className="p-8 border-border/50 bg-secondary/20 rounded-3xl flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
+                  <div className="w-24 h-24 rounded-3xl overflow-hidden bg-primary shadow-xl shadow-primary/10">
+                    <img src={course.instructor.avatar} alt={course.instructor.name} className="w-full h-full object-cover" />
                   </div>
-                  <div className="flex-grow">
-                    <h3 className="text-xl font-bold text-foreground mb-2">{course.instructor.name}</h3>
-                    <p className="text-foreground/70">{course.instructor.bio}</p>
-                    <Button variant="outline" className="mt-4">
-                      View Profile
-                    </Button>
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-2xl font-bold">{course.instructor.name}</h3>
+                      <p className="text-primary font-bold text-sm uppercase tracking-widest mt-1">Lead Programme Trainer</p>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed max-w-xl">
+                      {course.instructor.bio}
+                    </p>
+                    <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                       <Button variant="outline" className="rounded-xl font-bold">View Portfolio</Button>
+                       <Button variant="ghost" className="rounded-xl font-bold text-primary">Follow on LinkedIn</Button>
+                    </div>
                   </div>
                 </Card>
               </section>
             </div>
 
-            {/* Right sidebar */}
+            {/* Sticky Sidebar Right */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 space-y-6">
-                {/* Course stats */}
-                <Card className="p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Course Details</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-xs text-foreground/60 uppercase tracking-wide mb-1">Mode</p>
-                      <p className="font-medium text-foreground">{course.mode}</p>
+              <div className="sticky top-32 space-y-8">
+                <Card className="p-8 border-border/50 bg-card rounded-3xl space-y-6">
+                  <h3 className="text-xl font-bold">Eligibility & Schedule</h3>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Target Audience</p>
+                      <p className="text-sm font-medium leading-relaxed">School students, early graduates, and aspiring professionals in {course.category}.</p>
                     </div>
-                    <div>
-                      <p className="text-xs text-foreground/60 uppercase tracking-wide mb-1">Schedule</p>
-                      <p className="font-medium text-foreground text-sm">{course.schedule}</p>
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Detailed Schedule</p>
+                      <p className="text-sm font-bold flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-primary" /> {course.schedule}
+                      </p>
                     </div>
-                    <div>
-                      <p className="text-xs text-foreground/60 uppercase tracking-wide mb-1">Start Date</p>
-                      <p className="font-medium text-foreground">{course.startDate}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-foreground/60 uppercase tracking-wide mb-1">Capacity</p>
-                      <p className="font-medium text-foreground">{course.enrolled}/{course.maxCapacity} students</p>
+                    <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3">
+                      <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Enrolment Status</p>
+                      <div className="space-y-1">
+                        <div className="w-full h-1.5 bg-primary/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-primary" style={{ width: `${(course.enrolled / course.maxCapacity) * 100}%` }} />
+                        </div>
+                        <p className="text-xs font-bold text-foreground/80">{course.enrolled} / {course.maxCapacity} Seats Filled</p>
+                      </div>
                     </div>
                   </div>
                 </Card>
-
-                {/* Enrollment CTA */}
-                <Button
-                  className="w-full bg-primary hover:bg-primary/90 text-base py-6"
-                  onClick={() => setShowEnrollModal(true)}
-                >
-                  Enroll in Course
-                </Button>
               </div>
             </div>
           </div>
@@ -261,8 +290,7 @@ export default function CourseDetailPage() {
           onClose={() => setShowEnrollModal(false)}
           onSuccess={() => {
             setShowEnrollModal(false)
-            setEnrollmentSuccess(true)
-            setTimeout(() => router.push('/dashboard'), 2000)
+            router.push('/dashboard')
           }}
         />
       )}

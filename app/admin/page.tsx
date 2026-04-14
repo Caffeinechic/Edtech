@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { mockCourses, mockUsers, mockEnrollments } from '@/lib/mock-data'
 import {
   BookOpen,
@@ -12,196 +14,181 @@ import {
   Settings,
   ArrowRight,
   Award,
+  Filter,
+  Download,
+  Search,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  MoreHorizontal
 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
 export default function AdminDashboard() {
   const totalStudents = 1250
-  const totalEnrollments = mockEnrollments.length
   const activeUsers = 847
   const totalRevenue = mockEnrollments.length * 300
 
   return (
-    <main className="min-h-screen bg-background p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-foreground">Admin Dashboard</h1>
-            <p className="text-foreground/60">Platform overview and management</p>
-          </div>
-          <Button asChild>
-            <Link href="/">Back to Home</Link>
-          </Button>
-        </div>
-
-        {/* Key metrics */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-foreground/70">Total Students</h3>
-              <Users className="w-5 h-5 text-primary opacity-50" />
-            </div>
-            <p className="text-3xl font-bold text-foreground">{totalStudents}</p>
-            <p className="text-sm text-green-600 mt-2">↑ 12% from last month</p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-foreground/70">Active Enrollments</h3>
-              <BookOpen className="w-5 h-5 text-secondary opacity-50" />
-            </div>
-            <p className="text-3xl font-bold text-foreground">{totalEnrollments}</p>
-            <p className="text-sm text-green-600 mt-2">↑ 8% from last month</p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-foreground/70">Active Users</h3>
-              <TrendingUp className="w-5 h-5 text-accent opacity-50" />
-            </div>
-            <p className="text-3xl font-bold text-foreground">{activeUsers}</p>
-            <p className="text-sm text-green-600 mt-2">↑ 5% from last week</p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-foreground/70">Revenue (Est.)</h3>
-              <BarChart3 className="w-5 h-5 text-primary opacity-50" />
-            </div>
-            <p className="text-3xl font-bold text-foreground">${totalRevenue.toLocaleString()}</p>
-            <p className="text-sm text-green-600 mt-2">↑ 15% from last month</p>
-          </Card>
-        </div>
-
-        {/* Management sections */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Courses */}
-          <Card className="p-8">
-            <div className="flex items-center justify-between mb-6">
+    <main className="min-h-screen bg-background">
+      {/* Top Navigation / Breadcrumbs */}
+      <div className="border-b border-border/50 bg-card/50 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
+           <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20">A</div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Manage Courses</h2>
-                <p className="text-foreground/60">{mockCourses.length} courses in the system</p>
+                <h1 className="text-lg font-black tracking-tight">Admin <span className="text-primary italic">Control</span></h1>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Management Suite v2.0</p>
               </div>
-              <BookOpen className="w-8 h-8 text-primary opacity-30" />
-            </div>
+           </div>
+           
+           <div className="flex items-center gap-4">
+              <div className="relative hidden md:block">
+                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                 <Input className="w-64 h-10 pl-10 rounded-xl bg-secondary/50 border-none focus:bg-background transition-colors" placeholder="Search applications..." />
+              </div>
+              <Button variant="outline" className="rounded-xl font-bold h-10 px-4" asChild>
+                <Link href="/">Exit to Site</Link>
+              </Button>
+           </div>
+        </div>
+      </div>
 
-            <div className="space-y-3 mb-6">
-              {mockCourses.slice(0, 3).map(course => (
-                <div key={course.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <div>
-                    <p className="font-medium text-foreground text-sm">{course.title}</p>
-                    <p className="text-xs text-foreground/60">{course.enrollment} students</p>
-                  </div>
-                  <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded">
-                    {course.level}
-                  </span>
+      <div className="max-w-[1600px] mx-auto px-6 py-10 space-y-10">
+        {/* KPI Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+           {[
+             { label: 'Total Revenue', value: `$${totalRevenue.toLocaleString()}`, trend: '+12.5%', icon: BarChart3, color: 'text-primary', bg: 'bg-primary/10' },
+             { label: 'Active Students', value: totalStudents, trend: '+5.2%', icon: Users, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+             { label: 'Avg. Completion', value: '78%', trend: '+2.1%', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+             { label: 'Active Batches', value: '14', trend: 'Stable', icon: BookOpen, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+           ].map((kpi, i) => (
+             <Card key={i} className="p-8 border-border/40 premium-shadow bg-card rounded-3xl space-y-4">
+                <div className="flex items-center justify-between">
+                   <div className={`w-12 h-12 rounded-2xl ${kpi.bg} ${kpi.color} flex items-center justify-center`}>
+                     <kpi.icon className="w-6 h-6" />
+                   </div>
+                   <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-none text-[10px] font-bold">
+                     {kpi.trend}
+                   </Badge>
                 </div>
-              ))}
-            </div>
-
-            <Button className="w-full bg-primary hover:bg-primary/90">
-              Manage All Courses
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Card>
-
-          {/* Users */}
-          <Card className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">User Management</h2>
-                <p className="text-foreground/60">{totalStudents} registered users</p>
-              </div>
-              <Users className="w-8 h-8 text-secondary opacity-30" />
-            </div>
-
-            <div className="space-y-3 mb-6">
-              <div className="p-3 bg-muted rounded-lg">
-                <p className="font-medium text-foreground text-sm">Ravi Kumar</p>
-                <p className="text-xs text-foreground/60">3 courses completed • 125 hours</p>
-              </div>
-              <div className="p-3 bg-muted rounded-lg">
-                <p className="font-medium text-foreground text-sm">Priya Singh</p>
-                <p className="text-xs text-foreground/60">2 courses completed • 98 hours</p>
-              </div>
-              <div className="p-3 bg-muted rounded-lg">
-                <p className="font-medium text-foreground text-sm">Amit Patel</p>
-                <p className="text-xs text-foreground/60">1 course completed • 45 hours</p>
-              </div>
-            </div>
-
-            <Button className="w-full bg-secondary hover:bg-secondary/90">
-              Manage Users
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Card>
-
-          {/* Enrollments */}
-          <Card className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Enrollments</h2>
-                <p className="text-foreground/60">Monitor enrollment status</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-accent opacity-30" />
-            </div>
-
-            <div className="space-y-3 mb-6">
-              {[
-                { status: 'Approved', count: 1200, color: 'bg-green-100 text-green-700' },
-                { status: 'Pending Review', count: 45, color: 'bg-amber-100 text-amber-700' },
-                { status: 'Payment Pending', count: 23, color: 'bg-blue-100 text-blue-700' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <p className="font-medium text-foreground text-sm">{item.status}</p>
-                  <span className={`text-sm font-semibold px-3 py-1 rounded-full ${item.color}`}>
-                    {item.count}
-                  </span>
+                <div>
+                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{kpi.label}</p>
+                   <p className="text-3xl font-black text-foreground mt-1">{kpi.value}</p>
                 </div>
-              ))}
-            </div>
-
-            <Button className="w-full bg-accent hover:bg-accent/90">
-              View Enrollments
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Card>
-
-          {/* Settings */}
-          <Card className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Platform Settings</h2>
-                <p className="text-foreground/60">Configure platform features</p>
-              </div>
-              <Settings className="w-8 h-8 text-primary opacity-30" />
-            </div>
-
-            <div className="space-y-2 mb-6 text-sm text-foreground/70">
-              <p>• Configure pricing and payment methods</p>
-              <p>• Manage course categories and types</p>
-              <p>• Set enrollment policies</p>
-              <p>• Manage instructor accounts</p>
-              <p>• View analytics and reports</p>
-            </div>
-
-            <Button className="w-full bg-primary hover:bg-primary/90">
-              Platform Settings
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Card>
+             </Card>
+           ))}
         </div>
 
-        {/* Quick actions */}
-        <div className="mt-8 p-6 bg-card border border-border rounded-lg">
-          <h3 className="font-semibold text-foreground mb-4">Quick Actions</h3>
-          <div className="flex flex-wrap gap-3">
-            <Button variant="outline" size="sm">Create New Course</Button>
-            <Button variant="outline" size="sm">Send Announcement</Button>
-            <Button variant="outline" size="sm">Generate Report</Button>
-            <Button variant="outline" size="sm">Manage Trainers</Button>
-            <Button variant="outline" size="sm">View Analytics</Button>
-          </div>
+        {/* Dashboard Main Content */}
+        <div className="grid lg:grid-cols-3 gap-10">
+           {/* Application Management Table */}
+           <div className="lg:col-span-2 space-y-6">
+              <div className="flex items-center justify-between">
+                 <h2 className="text-2xl font-black tracking-tight">Recent <span className="text-primary italic">Applications</span></h2>
+                 <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="rounded-xl font-bold h-9">
+                       <Filter className="w-4 h-4 mr-2" /> Filter
+                    </Button>
+                    <Button variant="outline" size="sm" className="rounded-xl font-bold h-9">
+                       <Download className="w-4 h-4 mr-2" /> Export
+                    </Button>
+                 </div>
+              </div>
+
+              <Card className="border-border/40 premium-shadow bg-card rounded-3xl overflow-hidden">
+                 <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                       <thead>
+                          <tr className="border-b border-border/50 bg-secondary/20">
+                             <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Applicant</th>
+                             <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Course Path</th>
+                             <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
+                             <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Action</th>
+                          </tr>
+                       </thead>
+                       <tbody className="divide-y divide-border/50">
+                          {[
+                            { name: 'Arjun Mehta', email: 'arjun@example.com', course: 'AI Essentials', status: 'Pending', color: 'text-amber-500', bg: 'bg-amber-500/10', icon: Clock },
+                            { name: 'Sanya Gupta', email: 'sanya@design.co', course: 'UI Masterclass', status: 'Approved', color: 'text-emerald-500', bg: 'bg-emerald-500/10', icon: CheckCircle2 },
+                            { name: 'Rohan Verma', email: 'rohan.v@tech.in', course: 'Python Bootcamp', status: 'In Review', color: 'text-blue-500', bg: 'bg-blue-500/10', icon: AlertCircle },
+                            { name: 'Neha Sharma', email: 'neha@sharma.in', course: 'UI Masterclass', status: 'Pending', color: 'text-amber-500', bg: 'bg-amber-500/10', icon: Clock },
+                            { name: 'Vikram Singh', email: 'v.singh@gmail.com', course: 'AI Essentials', status: 'Approved', color: 'text-emerald-500', bg: 'bg-emerald-500/10', icon: CheckCircle2 },
+                          ].map((app, i) => (
+                             <tr key={i} className="hover:bg-secondary/10 transition-colors group">
+                                <td className="px-6 py-5">
+                                   <div>
+                                      <p className="font-bold text-sm tracking-tight">{app.name}</p>
+                                      <p className="text-xs text-muted-foreground">{app.email}</p>
+                                   </div>
+                                </td>
+                                <td className="px-6 py-5">
+                                   <p className="text-xs font-bold">{app.course}</p>
+                                </td>
+                                <td className="px-6 py-5">
+                                   <Badge className={`${app.bg} ${app.color} border-none text-[10px] font-black tracking-tight px-2.5 py-0.5 rounded-full uppercase`}>
+                                      <app.icon className="w-3 h-3 mr-1" /> {app.status}
+                                   </Badge>
+                                </td>
+                                <td className="px-6 py-5">
+                                   <Button variant="ghost" size="icon" className="rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
+                                   </Button>
+                                </td>
+                             </tr>
+                          ))}
+                       </tbody>
+                    </table>
+                 </div>
+                 <div className="p-6 border-t border-border/50 flex items-center justify-between">
+                    <p className="text-xs font-bold text-muted-foreground uppercase">Showing 5 of 45 applications</p>
+                    <div className="flex gap-2">
+                       <Button variant="outline" size="sm" className="rounded-xl h-9 font-black uppercase text-[10px] tracking-widest px-4">Prev</Button>
+                       <Button variant="outline" size="sm" className="rounded-xl h-9 font-black uppercase text-[10px] tracking-widest px-4">Next</Button>
+                    </div>
+                 </div>
+              </Card>
+           </div>
+
+           {/* Sidebar Actions & Activity */}
+           <div className="space-y-10">
+              <section className="space-y-6">
+                 <h2 className="text-2xl font-black tracking-tight">Quick <span className="text-primary italic">Actions</span></h2>
+                 <div className="grid grid-cols-1 gap-4">
+                    <Button size="lg" className="h-20 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-start px-8 gap-4">
+                       <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center"><BookOpen className="w-5 h-5" /></div>
+                       Create New Programme
+                    </Button>
+                    <Button size="lg" variant="outline" className="h-20 rounded-2xl bg-card border-border/50 text-foreground font-black text-lg shadow-lg hover:bg-secondary/50 transition-all flex items-center justify-start px-8 gap-4">
+                       <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><Award className="w-5 h-5" /></div>
+                       Issue Certificates
+                    </Button>
+                    <Button size="lg" variant="outline" className="h-20 rounded-2xl bg-card border-border/50 text-foreground font-black text-lg shadow-lg hover:bg-secondary/50 transition-all flex items-center justify-start px-8 gap-4">
+                       <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center"><Settings className="w-5 h-5" /></div>
+                       Platform Settings
+                    </Button>
+                 </div>
+              </section>
+
+              {/* Course Performance Summary */}
+              <section className="p-8 rounded-3xl border border-border/40 bg-card premium-shadow space-y-6">
+                 <h3 className="font-black text-sm uppercase tracking-widest text-muted-foreground">Programme Performance</h3>
+                 <div className="space-y-8">
+                    {mockCourses.slice(0, 3).map((course, i) => (
+                       <div key={i} className="space-y-2">
+                          <div className="flex justify-between items-center text-xs font-bold uppercase tracking-tight">
+                             <span className="truncate max-w-[150px]">{course.title}</span>
+                             <span className="text-primary">{course.enrollment} Students</span>
+                          </div>
+                          <Progress value={(course.enrollment / 200) * 100} className="h-1.5 bg-secondary" />
+                       </div>
+                    ))}
+                 </div>
+                 <Button variant="ghost" className="w-full rounded-xl font-bold h-11 text-primary hover:bg-primary/5" asChild>
+                    <Link href="/admin/analytics">Detailed Analytics <ArrowRight className="ml-2 w-4 h-4" /></Link>
+                 </Button>
+              </section>
+           </div>
         </div>
       </div>
     </main>

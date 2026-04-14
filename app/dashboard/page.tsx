@@ -5,6 +5,8 @@ import DashboardSidebar from '@/components/dashboard-sidebar'
 import DashboardHeader from '@/components/dashboard-header'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { mockCourses, mockEnrollments, mockUsers, mockCertificates } from '@/lib/mock-data'
 import {
   Play,
@@ -16,6 +18,9 @@ import {
   CheckCircle,
   ArrowRight,
   Calendar,
+  Zap,
+  MoreVertical,
+  Activity
 } from 'lucide-react'
 
 const user = mockUsers.student1
@@ -30,119 +35,85 @@ export default function DashboardPage() {
     <div className="flex min-h-screen bg-background">
       <DashboardSidebar />
 
-      <div className="flex-1 mt-12 lg:mt-0">
+      <div className="flex-1 mt-12 lg:mt-0 transition-all duration-300">
         <DashboardHeader />
 
-        <main className="p-6 lg:p-8">
-          {/* Stats Overview */}
-          <div className="grid md:grid-cols-4 gap-4 mb-8">
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground/60 mb-1">Active Courses</p>
-                  <p className="text-3xl font-bold text-foreground">{enrolledCourses.length}</p>
-                </div>
-                <BookOpen className="w-8 h-8 text-primary opacity-20" />
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground/60 mb-1">Total Hours</p>
-                  <p className="text-3xl font-bold text-foreground">{user.totalHours}</p>
-                </div>
-                <Clock className="w-8 h-8 text-secondary opacity-20" />
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground/60 mb-1">Completed</p>
-                  <p className="text-3xl font-bold text-foreground">{user.completedCourses}</p>
-                </div>
-                <CheckCircle className="w-8 h-8 text-accent opacity-20" />
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground/60 mb-1">Certificates</p>
-                  <p className="text-3xl font-bold text-foreground">{certificates.length}</p>
-                </div>
-                <Award className="w-8 h-8 text-amber-500 opacity-20" />
-              </div>
-            </Card>
+        <main className="p-4 sm:p-6 lg:p-10 space-y-10">
+          {/* Welcome Header */}
+          <div className="space-y-2">
+            <h1 className="text-3xl font-black tracking-tight">Welcome Back, <span className="text-primary italic">{user.name.split(' ')[0]}</span></h1>
+            <p className="text-muted-foreground font-medium">You have 2 courses in progress and 1 upcoming session today.</p>
           </div>
 
-          {/* Main content grid */}
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Enrolled Courses */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground">My Learning</h2>
-                <Button variant="outline" asChild>
-                  <Link href="/courses">Browse More</Link>
+          {/* Stats Grid: Modern Minimalist */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { label: 'Courses Active', value: enrolledCourses.length, icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+              { label: 'Learning Hours', value: user.totalHours, icon: Clock, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+              { label: 'Certificates', value: certificates.length, icon: Award, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+              { label: 'Tasks Done', value: '12', icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+            ].map((stat, i) => (
+              <Card key={i} className="p-6 border-border/40 premium-shadow bg-card rounded-3xl flex items-center gap-4">
+                <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center`}>
+                  <stat.icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
+                  <p className="text-2xl font-black text-foreground">{stat.value}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-10">
+            {/* My Active Learning - Primary Column */}
+            <div className="lg:col-span-2 space-y-8">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold tracking-tight">Active <span className="text-primary italic">Learning</span></h2>
+                <Button variant="ghost" className="rounded-xl font-bold text-primary group" asChild>
+                  <Link href="/courses">See all programmes <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" /></Link>
                 </Button>
               </div>
 
               {enrolledCourses.length > 0 ? (
-                <div className="space-y-4">
+                <div className="grid sm:grid-cols-1 gap-6">
                   {enrolledCourses.map((enrollment) => {
                     const course = enrollment.course
                     if (!course) return null
-
-                    const completedModules = enrollment.modules.filter(m => m.completed).length
-                    const totalModules = enrollment.modules.length
                     const progress = enrollment.completionPercentage
 
                     return (
-                      <Card key={enrollment.id} className="p-6 hover:border-accent/50 transition-colors">
-                        <div className="flex gap-6">
-                          {/* Course thumbnail */}
-                          <div className={`w-24 h-24 rounded-lg bg-gradient-to-br ${course.color} flex-shrink-0 relative overflow-hidden`}>
-                            <div className="absolute inset-0 bg-black/10" />
+                      <Card key={enrollment.id} className="p-8 border-border/40 bg-card rounded-3xl premium-shadow group hover:border-primary/20 transition-all">
+                        <div className="flex flex-col md:flex-row gap-8">
+                          <div className={`w-full md:w-32 h-32 rounded-2xl bg-gradient-to-br ${course.color} flex-shrink-0 flex items-center justify-center p-4`}>
+                             <Zap className="w-10 h-10 text-white/50" />
                           </div>
-
-                          {/* Course info */}
-                          <div className="flex-grow">
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h3 className="text-lg font-bold text-foreground">{course.title}</h3>
-                                <p className="text-sm text-foreground/60">{course.category}</p>
+                          <div className="flex-grow space-y-4">
+                            <div className="flex items-start justify-between">
+                              <div className="space-y-1">
+                                <Badge variant="secondary" className="bg-primary/5 text-primary border-none text-[10px] font-black uppercase tracking-widest">{course.category}</Badge>
+                                <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{course.title}</h3>
                               </div>
-                              <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                progress === 100
-                                  ? 'bg-green-100 text-green-700'
-                                  : 'bg-blue-100 text-blue-700'
-                              }`}>
-                                {progress === 100 ? 'Completed' : 'In Progress'}
-                              </span>
+                              <Button variant="ghost" size="icon" className="rounded-xl"><MoreVertical className="w-5 h-5" /></Button>
+                            </div>
+                            
+                            <div className="space-y-2">
+                               <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                                  <span className="text-muted-foreground">Progress</span>
+                                  <span className="text-primary">{progress}%</span>
+                               </div>
+                               <Progress value={progress} className="h-2 bg-secondary" />
                             </div>
 
-                            {/* Progress bar */}
-                            <div className="mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <p className="text-xs text-foreground/60">
-                                  {completedModules} of {totalModules} modules completed
-                                </p>
-                                <p className="text-sm font-medium text-foreground">{progress}%</p>
-                              </div>
-                              <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300"
-                                  style={{ width: `${progress}%` }}
-                                />
-                              </div>
+                            <div className="flex items-center justify-between pt-2">
+                               <div className="flex items-center gap-4 text-xs font-bold text-muted-foreground">
+                                  <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> 8h left</div>
+                                  <div className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> 4/6 modules</div>
+                               </div>
+                               <Button className="rounded-xl h-10 font-bold bg-primary shadow-lg shadow-primary/20">
+                                  <Play className="w-4 h-4 mr-2 fill-current" /> Continue
+                               </Button>
                             </div>
-
-                            {/* Actions */}
-                            <Button className="bg-primary hover:bg-primary/90" size="sm">
-                              <Play className="w-4 h-4 mr-2" />
-                              Continue Learning
-                            </Button>
                           </div>
                         </div>
                       </Card>
@@ -150,80 +121,91 @@ export default function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <Card className="p-12 text-center">
-                  <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                  <p className="text-foreground/70 mb-4">No courses enrolled yet</p>
-                  <Button asChild>
-                    <Link href="/courses">Browse Courses</Link>
+                <Card className="p-20 border-dashed border-2 border-border/50 text-center rounded-3xl bg-secondary/10">
+                  <div className="w-16 h-16 rounded-full bg-secondary/50 flex items-center justify-center mx-auto mb-6">
+                    <BookOpen className="w-8 h-8 text-muted-foreground opacity-50" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">No active courses</h3>
+                  <p className="text-muted-foreground mb-8">Ready to start your journey? Explore our premium certificate programmes.</p>
+                  <Button size="lg" className="rounded-xl font-bold px-8 shadow-xl" asChild>
+                    <Link href="/courses">Browse Catalog</Link>
                   </Button>
                 </Card>
               )}
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Quick stats */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-accent" />
-                  This Week
+            {/* Sidebar Column */}
+            <div className="space-y-10">
+              {/* Activity Timeline */}
+              <section className="space-y-6">
+                <h3 className="text-xl font-bold tracking-tight flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-primary" />
+                  Recent <span className="text-primary italic">Activity</span>
                 </h3>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm text-foreground/60 mb-1">Learning Time</p>
-                    <p className="text-2xl font-bold text-primary">12 hours</p>
-                    <p className="text-xs text-green-600">↑ 20% from last week</p>
-                  </div>
-                  <div className="pt-3 border-t border-border">
-                    <p className="text-sm text-foreground/60 mb-1">Lessons Completed</p>
-                    <p className="text-2xl font-bold text-secondary">8</p>
-                  </div>
+                <div className="space-y-6 relative ml-4 pl-8 border-l border-border/50">
+                   {[
+                     { title: 'Module Completed', time: '2 hours ago', desc: 'AI Basics: Introduction to Neural Networks', icon: CheckCircle, color: 'text-emerald-500' },
+                     { title: 'New Course Joined', time: 'Yesterday', desc: 'Web Design Essentials: UI Kit Masterclass', icon: Play, color: 'text-blue-500' },
+                     { title: 'Quiz Passed', time: '2 days ago', desc: 'Marketing Fundamentals: Score 92/100', icon: Award, color: 'text-amber-500' },
+                   ].map((item, i) => (
+                     <div key={i} className="relative">
+                        <div className={`absolute -left-[45px] top-0 w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center ${item.color} shadow-sm`}>
+                           <item.icon className="w-4 h-4" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">{item.time}</p>
+                          <p className="font-bold text-sm">{item.title}</p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                        </div>
+                     </div>
+                   ))}
                 </div>
-              </Card>
+              </section>
 
-              {/* Certificates */}
+              {/* Certificates Sidebar */}
               {certificates.length > 0 && (
-                <Card className="p-6">
-                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                <section className="p-8 rounded-3xl border border-border/40 bg-card premium-shadow space-y-6">
+                  <h3 className="font-bold flex items-center gap-2">
                     <Award className="w-5 h-5 text-amber-500" />
-                    Certificates
+                    My Certificates
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {certificates.slice(0, 2).map((cert) => (
-                      <div key={cert.id} className="p-3 bg-amber-50 rounded-lg">
-                        <p className="text-sm font-medium text-amber-900">{cert.courseName}</p>
-                        <p className="text-xs text-amber-700">
-                          Earned on {new Date(cert.issuedDate).toLocaleDateString()}
-                        </p>
-                      </div>
+                      <Link key={cert.id} href={`/certificates/${cert.id}`} className="block group">
+                        <div className="p-4 rounded-2xl bg-secondary/30 border border-transparent group-hover:border-amber-500/20 group-hover:bg-amber-500/5 transition-all">
+                          <p className="text-sm font-bold group-hover:text-amber-600 transition-colors">{cert.courseName}</p>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase mt-1">Earned {new Date(cert.issuedDate).toLocaleDateString()}</p>
+                        </div>
+                      </Link>
                     ))}
                   </div>
-                  {certificates.length > 2 && (
-                    <Button variant="outline" className="w-full mt-3" asChild>
-                      <Link href="/certificates">View All</Link>
-                    </Button>
-                  )}
-                </Card>
+                  <Button variant="outline" className="w-full rounded-xl font-bold h-11" asChild>
+                    <Link href="/certificates">View All <ArrowRight className="ml-2 w-4 h-4" /></Link>
+                  </Button>
+                </section>
               )}
 
-              {/* Upcoming */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-secondary" />
-                  Next Session
-                </h3>
+              {/* Upcoming Session */}
+              <section className="p-8 rounded-3xl bg-primary text-white premium-shadow space-y-6">
+                <div className="space-y-1">
+                  <h3 className="font-bold flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-white/70" />
+                    Upcoming Session
+                  </h3>
+                  <p className="text-xs text-white/70 font-medium">Tomorrow at 6:00 PM</p>
+                </div>
                 {enrolledCourses.length > 0 && enrolledCourses[0].course ? (
-                  <div className="space-y-2 text-sm">
-                    <p className="text-foreground">{enrolledCourses[0].course.title}</p>
-                    <p className="text-foreground/60">{enrolledCourses[0].course.schedule}</p>
-                    <Button className="w-full mt-4 bg-secondary hover:bg-secondary/90" size="sm">
-                      Set Reminder
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10">
+                      <p className="text-sm font-bold">{enrolledCourses[0].course.title}</p>
+                      <p className="text-xs text-white/60 mt-1">Live Q&A Workshop</p>
+                    </div>
+                    <Button className="w-full rounded-xl h-11 font-bold bg-white text-primary hover:bg-white/90">
+                      Join Waiting Room
                     </Button>
                   </div>
-                ) : (
-                  <p className="text-sm text-foreground/60">Enroll in a course to see next sessions</p>
-                )}
-              </Card>
+                ) : null}
+              </section>
             </div>
           </div>
         </main>
