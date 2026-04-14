@@ -10,13 +10,13 @@ const mockUsers: Record<string, { password: string; role: SessionPayload['role']
   'user@innoventa.com': {
     password: 'password123',
     role: 'student',
-    name: 'Ravi Kumar',
+    name: 'Amit Shah',
     id: 'student1',
   },
   'ravi.kumar@email.com': {
     password: 'password',
     role: 'student',
-    name: 'Ravi Kumar',
+    name: 'Amit Shah',
     id: 'student1',
   },
   'admin@innoventa.com': {

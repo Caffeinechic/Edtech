@@ -1,12 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import EnrollmentModal from '@/components/enrollment-modal'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -21,10 +19,8 @@ import {
 
 export default function CourseDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const courseId = parseInt(params.id as string)
   const course = mockCourses.find(c => c.id === courseId)
-  const [showEnrollModal, setShowEnrollModal] = useState(false)
 
   if (!course) {
     return (
@@ -158,10 +154,12 @@ export default function CourseDetailPage() {
                     <Button 
                       size="lg" 
                       className="h-16 w-full rounded-2xl bg-primary text-xl font-bold shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5"
-                      onClick={() => setShowEnrollModal(true)}
+                      asChild
                     >
-                      Apply Now
-                      <ArrowRight className="ml-2 w-6 h-6" />
+                      <Link href={`/courses/${course.id}/apply`}>
+                        Apply Now
+                        <ArrowRight className="ml-2 w-6 h-6" />
+                      </Link>
                     </Button>
                     <p className="text-center text-xs font-medium text-muted-foreground">
                       No recruitment fee. Pay only for the certification.
@@ -302,20 +300,6 @@ export default function CourseDetailPage() {
           </div>
         </div>
       </div>
-
-      {/* Enrollment Modal */}
-      {showEnrollModal && (
-        <EnrollmentModal
-          courseId={course.id}
-          courseName={course.title}
-          coursePrice={course.price}
-          onClose={() => setShowEnrollModal(false)}
-          onSuccess={() => {
-            setShowEnrollModal(false)
-            router.push('/dashboard')
-          }}
-        />
-      )}
 
       <Footer />
     </main>

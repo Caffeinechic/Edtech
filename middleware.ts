@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SESSION_COOKIE_NAME, verifySession } from '@/lib/auth'
 
-const PROTECTED_PREFIXES = ['/dashboard', '/admin', '/settings', '/certificates']
+const PROTECTED_PREFIXES = ['/dashboard', '/admin', '/settings', '/certificates', '/courses']
 
 function isProtectedPath(pathname: string) {
   return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
@@ -43,5 +43,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*', '/settings/:path*', '/certificates/:path*'],
+  matcher: ['/dashboard/:path*', '/admin/:path*', '/settings/:path*', '/certificates/:path*', '/courses/:path*/apply'],
 }
