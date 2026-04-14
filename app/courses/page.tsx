@@ -1,22 +1,40 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { mockCourses } from '@/lib/mock-data'
-import { Search, Filter, Clock, Users, Star, Target } from 'lucide-react'
+import { learningTracks, mockCourses } from '@/lib/mock-data'
+import { getCourseImage } from '@/lib/course-images'
+import { Search, Filter, Clock, Users, Star, Target, ArrowLeft, ExternalLink } from 'lucide-react'
 
 export default function CoursesPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedMode, setSelectedMode] = useState('All')
   const [selectedLevel, setSelectedLevel] = useState('All')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  const categories = ['All', ...new Set(mockCourses.map(c => c.category))]
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/auth/session')
+        if (!response.ok) return
+        const body = (await response.json()) as { authenticated?: boolean }
+        setIsAuthenticated(Boolean(body.authenticated))
+      } catch {
+        setIsAuthenticated(false)
+      }
+    }
+
+    void checkSession()
+  }, [])
+
+  const categories = ['All', ...learningTracks]
   const modes = ['All', 'Online', 'Offline', 'Hybrid']
   const levels = ['All', 'Beginner', 'Intermediate', 'Advanced']
 
@@ -37,19 +55,36 @@ export default function CoursesPage() {
       <Navbar />
 
       {/* Hero section */}
-      <section className="bg-gradient-to-b from-card/50 to-background pt-12 pb-8 px-4 sm:px-6 lg:px-8">
+      <section className="border-b border-border bg-card/40 pt-12 pb-8 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
+          {isAuthenticated && (
+            <div className="mb-5">
+              <Button variant="outline" asChild>
+                <Link href="/dashboard">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Dashboard
+                </Link>
+              </Button>
+            </div>
+          )}
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4 text-center text-balance">
             Explore Our Courses
           </h1>
           <p className="text-lg text-foreground/70 text-center max-w-2xl mx-auto">
-            Find the perfect course to develop your skills
+            Explore curated pathways in AI, software, cloud, and emerging technologies.
           </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            {learningTracks.map((track) => (
+              <span key={track} className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground/80">
+                {track}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Main content */}
-      <div className="flex-grow bg-background">
+      <div className="grow bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Sidebar filters */}
@@ -161,9 +196,14 @@ export default function CoursesPage() {
                   {filteredCourses.map(course => (
                     <Link key={course.id} href={`/courses/${course.id}`}>
                       <Card className="h-full overflow-hidden hover:shadow-lg transition-all hover:border-accent/50 cursor-pointer group">
-                        {/* Course header gradient */}
-                        <div className={`h-40 bg-gradient-to-br ${course.color} relative overflow-hidden`}>
-                          <div className="absolute inset-0 bg-black/10" />
+                        <div className="h-40 relative overflow-hidden border-b border-border/60 bg-muted/30">
+                          <Image
+                            src={getCourseImage(course.id)}
+                            alt={`${course.title} thumbnail`}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/55 via-slate-950/10 to-transparent" />
                           <div className="absolute top-3 right-3 bg-white/90 px-3 py-1 rounded-full">
                             <span className="text-xs font-semibold text-primary">${course.price}</span>
                           </div>
@@ -186,27 +226,41 @@ export default function CoursesPage() {
                             </h3>
                           </div>
 
-                          <p className="text-sm text-foreground/70 mb-6 flex-grow line-clamp-2">
+                          <p className="mb-6 grow line-clamp-2 text-sm text-foreground/70">
                             {course.description}
                           </p>
+
+                          <div className="mb-4 rounded-lg border border-border bg-muted/30 p-3">
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Source Curriculum</p>
+                            <a
+                              href={course.sourceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {course.provider}
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                          </div>
 
                           {/* Metadata */}
                           <div className="space-y-3 py-4 border-t border-border">
                             <div className="flex items-center gap-2 text-sm text-foreground/70">
-                              <Clock className="w-4 h-4 text-accent flex-shrink-0" />
+                              <Clock className="h-4 w-4 shrink-0 text-accent" />
                               <span>{course.duration}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-foreground/70">
-                              <Users className="w-4 h-4 text-accent flex-shrink-0" />
+                              <Users className="h-4 w-4 shrink-0 text-accent" />
                               <span>{course.enrollment} students</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-foreground/70">
-                              <Target className="w-4 h-4 text-accent flex-shrink-0" />
+                              <Target className="h-4 w-4 shrink-0 text-accent" />
                               <span>{course.level}</span>
                             </div>
                           </div>
 
-                          <Button className="w-full mt-6 bg-primary hover:bg-primary/90">
+                          <Button className="w-full mt-2 bg-primary hover:bg-primary/90">
                             View Course
                           </Button>
                         </div>

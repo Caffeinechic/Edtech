@@ -1,18 +1,23 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { BookOpen } from 'lucide-react'
+import { BookOpen, LayoutDashboard } from 'lucide-react'
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+    <nav className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary">
-            <BookOpen className="w-6 h-6 text-white" />
-          </div>
-          <span className="hidden text-xl font-bold text-foreground sm:block">Innoventa</span>
+          <Image
+            src="/innoventa-brand.svg"
+            alt="Innoventa"
+            width={320}
+            height={60}
+            className="h-8 w-auto sm:h-10"
+            priority
+          />
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -32,10 +37,16 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild className="hidden sm:inline-flex">
-            <Link href="/login">Login</Link>
+            <Link href="/dashboard">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              Dashboard
+            </Link>
           </Button>
           <Button asChild className="bg-primary hover:bg-primary/90">
-            <Link href="/enroll">Enroll Now</Link>
+            <Link href="/courses">
+              <BookOpen className="mr-2 h-4 w-4" />
+              Browse Courses
+            </Link>
           </Button>
         </div>
       </div>

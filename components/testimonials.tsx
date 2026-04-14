@@ -64,13 +64,13 @@ export default function Testimonials() {
               </div>
 
               {/* Content */}
-              <p className="text-foreground/80 text-base leading-relaxed mb-6 flex-grow">
+              <p className="mb-6 grow text-base leading-relaxed text-foreground/80">
                 &quot;{testimonial.content}&quot;
               </p>
 
               {/* Author */}
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
                   <span className="text-sm font-semibold text-white">{testimonial.initial}</span>
                 </div>
                 <div>

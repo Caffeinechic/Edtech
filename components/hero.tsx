@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Play, ShieldCheck, Star } from 'lucide-react'
+import { dashboardPreviewImage } from '@/lib/course-images'
 
 export default function Hero() {
   return (
@@ -63,7 +64,7 @@ export default function Hero() {
           <div className="flex-1 w-full relative">
             <div className="relative z-10 rounded-2xl border border-border/50 overflow-hidden premium-shadow bg-card shadow-2xl animate-in fade-in slide-in-from-bottom-10 duration-1000">
               <Image 
-                src="/images/hero-preview.png" 
+                src={dashboardPreviewImage} 
                 alt="Innoventa Dashboard Preview" 
                 width={800} 
                 height={600}

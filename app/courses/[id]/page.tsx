@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
@@ -11,10 +12,11 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { mockCourses } from '@/lib/mock-data'
+import { getCourseImage } from '@/lib/course-images'
 import { 
   Clock, Users, Star, Target, CheckCircle, Award, 
-  BarChart3, BookOpen, Zap, User, ArrowRight, Share2,
-  Calendar, ShieldCheck, Globe, Wifi, Users2
+  ArrowRight,
+  Calendar, ShieldCheck, Globe, Wifi, Users2, ExternalLink
 } from 'lucide-react'
 
 export default function CourseDetailPage() {
@@ -28,7 +30,7 @@ export default function CourseDetailPage() {
     return (
       <main className="min-h-screen bg-background flex flex-col">
         <Navbar />
-        <div className="flex-grow flex items-center justify-center px-4">
+        <div className="flex grow items-center justify-center px-4">
           <Card className="text-center py-12 px-6 max-w-md border-border/50 premium-shadow">
             <p className="text-foreground/70 mb-4">Course not found</p>
             <Button size="lg" className="rounded-xl font-bold" asChild>
@@ -49,8 +51,8 @@ export default function CourseDetailPage() {
 
       {/* Hero Section: Dynamic & Premium */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className={`absolute inset-0 bg-gradient-to-br ${course.color} opacity-[0.03] -z-10`} />
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent -z-10" />
+        <div className="absolute inset-0 bg-muted/20 -z-10" />
+        <div className="absolute top-0 right-0 h-full w-1/2 bg-primary/5 -z-10" />
         
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12 items-start">
@@ -72,6 +74,16 @@ export default function CourseDetailPage() {
               <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
                 {course.description}
               </p>
+
+              <a
+                href={course.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-primary hover:underline"
+              >
+                Curriculum Source: {course.provider}
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
 
               <div className="flex flex-wrap items-center gap-6 pt-4">
                 <div className="flex items-center gap-2">
@@ -100,6 +112,16 @@ export default function CourseDetailPage() {
                   Joined by <span className="text-foreground font-bold">200+</span> professionals this week
                 </p>
               </div>
+
+              <div className="relative h-52 overflow-hidden rounded-2xl border border-border/60 bg-muted/20 sm:h-64">
+                <Image
+                  src={getCourseImage(course.id)}
+                  alt={`${course.title} banner`}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/40 via-transparent to-transparent" />
+              </div>
             </div>
 
             {/* Quick Pricing & CTA Card */}
@@ -120,13 +142,13 @@ export default function CourseDetailPage() {
                   <div className="grid grid-cols-2 gap-4 py-6 border-y border-border/50">
                     <div className="space-y-1">
                       <p className="text-[10px] font-bold text-muted-foreground uppercase">Duration</p>
-                      <p className="text-sm font-bold flex items-center gap-1.5">
+                      <p className="flex items-center gap-1.5 text-sm font-bold">
                         <Clock className="w-4 h-4 text-primary" /> {course.duration}
                       </p>
                     </div>
                     <div className="space-y-1">
                       <p className="text-[10px] font-bold text-muted-foreground uppercase">Level</p>
-                      <p className="text-sm font-bold flex items-center gap-1.5">
+                      <p className="flex items-center gap-1.5 text-sm font-bold">
                         <Target className="w-4 h-4 text-primary" /> {course.level}
                       </p>
                     </div>
@@ -135,7 +157,7 @@ export default function CourseDetailPage() {
                   <div className="space-y-4">
                     <Button 
                       size="lg" 
-                      className="w-full h-16 rounded-2xl bg-primary text-xl font-bold shadow-xl shadow-primary/20 hover:translate-y-[-2px] transition-all"
+                      className="h-16 w-full rounded-2xl bg-primary text-xl font-bold shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5"
                       onClick={() => setShowEnrollModal(true)}
                     >
                       Apply Now
@@ -163,7 +185,7 @@ export default function CourseDetailPage() {
       </section>
 
       {/* Main Content Sections */}
-      <div className="flex-grow bg-background">
+      <div className="grow bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2 space-y-16">
@@ -176,7 +198,7 @@ export default function CourseDetailPage() {
                 <div className="grid sm:grid-cols-2 gap-6 pt-6">
                   {course.learningOutcomes.slice(0, 4).map((outcome, i) => (
                     <div key={i} className="flex gap-4 p-5 rounded-2xl border border-border/50 bg-secondary/30">
-                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
                         <CheckCircle className="w-4 h-4 text-primary" />
                       </div>
                       <p className="text-sm font-medium text-foreground/80 italic">{outcome}</p>
@@ -229,7 +251,7 @@ export default function CourseDetailPage() {
                 <h2 className="text-3xl font-bold tracking-tight mb-8">Meet the <span className="text-primary italic">Expert</span></h2>
                 <Card className="p-8 border-border/50 bg-secondary/20 rounded-3xl flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
                   <div className="w-24 h-24 rounded-3xl overflow-hidden bg-primary shadow-xl shadow-primary/10">
-                    <img src={course.instructor.avatar} alt={course.instructor.name} className="w-full h-full object-cover" />
+                    <Image src={course.instructor.avatar} alt={course.instructor.name} width={96} height={96} className="h-full w-full object-cover" />
                   </div>
                   <div className="space-y-4">
                     <div>

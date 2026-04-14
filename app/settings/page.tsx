@@ -48,13 +48,13 @@ export default function SettingsPage() {
   ]
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <DashboardSidebar />
 
-      <div className="flex-1 mt-12 lg:mt-0">
+      <div className="mt-12 flex flex-col min-h-screen lg:mt-0 lg:ml-72">
         <DashboardHeader />
 
-        <main className="p-6 lg:p-8">
+        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
           {/* Header */}
           <div className="flex items-center gap-4 mb-8">
             <Link href="/dashboard">
@@ -100,7 +100,7 @@ export default function SettingsPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-4">Profile Picture</h3>
                     <div className="flex items-center gap-6">
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-xl font-semibold text-white">
+                      <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-xl font-semibold text-white">
                         {user.name.charAt(0)}
                       </div>
                       <Button variant="outline">Change Picture</Button>

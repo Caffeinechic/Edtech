@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Users, Clock, Target, ArrowRight, Sparkles } from 'lucide-react'
+import { Users, Clock, Target, ArrowRight, Sparkles, ExternalLink } from 'lucide-react'
 import { mockCourses } from '@/lib/mock-data'
+import { getCourseImage } from '@/lib/course-images'
 
 export default function FeaturedCourses() {
   const [activeTab, setActiveTab] = useState('All')
@@ -31,7 +33,7 @@ export default function FeaturedCourses() {
               Featured Certification <span className="text-primary italic">Programmes</span>
             </h2>
             <p className="text-lg text-muted-foreground">
-              Intensive 25-hour courses designed to give you practical, industry-ready skills.
+              Premium foundational and career-track programs mapped to trusted global curriculum sources.
             </p>
           </div>
           
@@ -54,9 +56,14 @@ export default function FeaturedCourses() {
           {filteredCourses.map((course) => (
             <Link key={course.id} href={`/courses/${course.id}`}>
               <Card className="group h-full flex flex-col border-border/50 bg-card hover:border-primary/30 premium-shadow transition-all duration-300 rounded-2xl overflow-hidden cursor-pointer">
-                {/* Image/Gradient Header */}
-                <div className={`relative h-48 bg-gradient-to-br ${course.color} overflow-hidden`}>
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
+                <div className="relative h-48 overflow-hidden border-b border-border/60 bg-muted/30">
+                  <Image
+                    src={getCourseImage(course.id)}
+                    alt={`${course.title} thumbnail`}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/55 via-slate-950/10 to-transparent" />
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm">
                       {course.category}
@@ -71,13 +78,24 @@ export default function FeaturedCourses() {
                   </div>
                 </div>
 
-                <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors line-clamp-1">
+                <div className="flex grow flex-col p-8">
+                  <h3 className="mb-3 line-clamp-2 text-xl font-bold text-foreground transition-colors group-hover:text-primary">
                     {course.title}
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-8 line-clamp-2">
                     {course.description}
                   </p>
+
+                  <a
+                    href={course.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mb-6 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {course.provider}
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
 
                   <div className="grid grid-cols-2 gap-4 mt-auto pt-6 border-t border-border/50">
                     <div className="flex items-center gap-2">

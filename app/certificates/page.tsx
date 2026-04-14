@@ -21,13 +21,13 @@ const userCertificates = mockCertificates.filter(c => c.userId === user.id)
 
 export default function CertificatesPage() {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <DashboardSidebar />
 
-      <div className="flex-1 mt-12 lg:mt-0">
+      <div className="mt-12 flex flex-col min-h-screen lg:mt-0 lg:ml-72">
         <DashboardHeader />
 
-        <main className="p-6 lg:p-8">
+        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
           {/* Header */}
           <div className="flex items-center gap-4 mb-8">
             <Link href="/dashboard">
@@ -91,7 +91,7 @@ export default function CertificatesPage() {
                       <div className="grid md:grid-cols-2 gap-6 p-6">
                         {/* Certificate preview */}
                         <div className="flex flex-col justify-center">
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-200 rounded-lg p-8 relative overflow-hidden">
+                          <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-8 relative overflow-hidden">
                             {/* Decorative elements */}
                             <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-amber-300" />
                             <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-amber-300" />

@@ -1,0 +1,15 @@
+<svg width="1400" height="260" viewBox="0 0 1400 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="260" rx="22" fill="#F5F7FB"/>
+  <g transform="translate(20,20)">
+    <ellipse cx="110" cy="110" rx="84" ry="48" transform="rotate(-32 110 110)" fill="none" stroke="#05060A" stroke-width="20"/>
+    <ellipse cx="110" cy="110" rx="86" ry="52" transform="rotate(42 110 110)" fill="none" stroke="#1E40D0" stroke-width="20"/>
+    <circle cx="110" cy="110" r="24" fill="#1E40D0"/>
+    <rect x="102" y="130" width="16" height="32" rx="8" fill="#1E40D0"/>
+    <rect x="95" y="163" width="30" height="5" rx="2.5" fill="#111827"/>
+    <rect x="96" y="171" width="28" height="4" rx="2" fill="#111827"/>
+    <rect x="98" y="178" width="24" height="4" rx="2" fill="#111827"/>
+  </g>
+  <rect x="250" y="24" width="6" height="212" fill="#111827"/>
+  <text x="292" y="122" font-family="Arial, Helvetica, sans-serif" font-size="126" font-weight="700" letter-spacing="2" fill="#1E40D0">INNOVENTA</text>
+  <text x="292" y="206" font-family="Arial, Helvetica, sans-serif" font-size="60" font-weight="600" letter-spacing="1.2" fill="#111827">INNOVATION • ENTREPRENEURSHIP • TALENT</text>
+</svg>

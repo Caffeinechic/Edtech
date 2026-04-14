@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { BookOpen, ArrowRight, User, Mail, Lock, Phone } from 'lucide-react'
+import { ArrowRight, User, Mail, Lock, Phone } from 'lucide-react'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -55,9 +56,7 @@ export default function SignupPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-white" />
-            </div>
+            <Image src="/innoventa-logo.svg" alt="Innoventa logo" width={40} height={40} className="h-10 w-10" />
             <span className="font-bold text-lg text-foreground">Innoventa</span>
           </Link>
           <h1 className="text-3xl font-bold text-foreground mb-2">Get Started</h1>
